@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allpa y Flora - Raíces ancestrales, cura natural</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Quicksand:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #c20032;
+            --primary-orange: #f57029;
+            --primary-green: #649532;
+            --secondary-yellow: #fdea8d;
+            --secondary-peach: #f9a65c;
+            --secondary-olive: #77853c;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #f5f9f0 0%, #e8f5e0 100%);
+        }
+
+        /* Logo Splash Screen */
+        #splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-olive));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeOut 0.5s ease-in-out 4s forwards;
+        }
+
+        #splash-logo {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .vine {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            opacity: 0;
+            animation: growLeaf 3s ease-out forwards;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        @keyframes growLeaf {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(360deg);
+            }
+        }
+
+        /* Botanical Background */
+        .botanical-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .botanical-leaf {
+            position: absolute;
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-olive));
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '🌿';
+            position: absolute;
+            font-size: 10rem;
+            opacity: 0.1;
+            left: -50px;
+            top: -30px;
+            animation: rotate 20s linear infinite;
+        }
+
+        header::after {
+            content: '🌱';
+            position: absolute;
+            font-size: 8rem;
+            opacity: 0.1;
+            right: -30px;
+            bottom: -20px;
+            animation: rotate 15s linear infinite reverse;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: slideDown 1s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slogan {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            color: var(--secondary-yellow);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Rotating Messages */
+        .message-container {
+            background: rgba(255,255,255,0.95);
+            padding: 2rem;
+            margin: 3rem auto;
+            max-width: 900px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(100, 149, 50, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .rotating-message {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: fadeInOut 15s infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+
+        .message-tagline {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--primary-green);
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            background: white;
+            padding: 3rem;
+            margin: 2rem 0;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            animation: slideUp 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-red), var(--primary-orange), var(--primary-green));
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-orange), var(--primary-green));
+        }
+
+        p {
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        /* Map */
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 15px;
+            margin-top: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Contact */
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-item {
+            background: linear-gradient(135deg, var(--secondary-yellow), var(--secondary-peach));
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .contact-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-item h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--secondary-olive), var(--primary-green));
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '🍃';
+            position: absolute;
+            font-size: 15rem;
+            opacity: 0.05;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            animation: rotate 30s linear infinite;
+        }
+
+        .footer-vine {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 20px,
+                rgba(255,255,255,0.2) 20px,
+                rgba(255,255,255,0.2) 40px
+            );
+            animation: vineScroll 10s linear infinite;
+        }
+
+        @keyframes vineScroll {
+            from { background-position: 0 0; }
+            to { background-position: 40px 0; }
+        }
+
+        footer p {
+            font-family: 'Quicksand', sans-serif;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-credit {
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .slogan {
+                font-size: 1.2rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            section {
+                padding: 2rem;
+            }
+
+            #map {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash">
+        <div id="splash-logo">
+            ALLPA<br>Y<br>FLORA
+        </div>
+        <svg class="vine" viewBox="0 0 1200 800">
+            <path class="leaf" d="M 600 400 Q 650 350, 700 380 Q 650 420, 600 400 Z" fill="#649532" style="animation-delay: 0.5s" />
+            <path class="leaf" d="M 600 400 Q 550 350, 500 380 Q 550 420, 600 400 Z" fill="#77853c" style="animation-delay: 0.8s" />
+            <path class="leaf" d="M 600 400 Q 650 450, 700 420 Q 650 380, 600 400 Z" fill="#649532" style="animation-delay: 1.1s" />
+            <path class="leaf" d="M 600 400 Q 550 450, 500 420 Q 550 380, 600 400 Z" fill="#77853c" style="animation-delay: 1.4s" />
+            <circle class="leaf" cx="750" cy="300" r="20" fill="#f57029" style="animation-delay: 1.7s" />
+            <circle class="leaf" cx="450" cy="300" r="20" fill="#f57029" style="animation-delay: 2s" />
+            <circle class="leaf" cx="750" cy="500" r="20" fill="#c20032" style="animation-delay: 2.3s" />
+            <circle class="leaf" cx="450" cy="500" r="20" fill="#c20032" style="animation-delay: 2.6s" />
+        </svg>
+    </div>
+
+    <!-- Botanical Background -->
+    <div class="botanical-bg">
+        <div class="botanical-leaf" style="top: 10%; left: 5%; font-size: 5rem; animation-delay: 0s;">🌿</div>
+        <div class="botanical-leaf" style="top: 60%; left: 80%; font-size: 4rem; animation-delay: 2s;">🍃</div>
+        <div class="botanical-leaf" style="top: 30%; right: 10%; font-size: 6rem; animation-delay: 4s;">🌱</div>
+        <div class="botanical-leaf" style="bottom: 20%; left: 15%; font-size: 5rem; animation-delay: 6s;">🌾</div>
+        <div class="botanical-leaf" style="top: 70%; left: 40%; font-size: 4rem; animation-delay: 8s;">🌿</div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1>ALLPA Y FLORA</h1>
+        <p class="slogan">Raíces ancestrales, cura natural</p>
+        <p class="slogan">Sembrando plantas, sanando vidas</p>
+        <p class="slogan">Sabiduría de la tierra, medicina del alma</p>
+    </header>
+
+    <!-- Rotating Messages -->
+    <div class="message-container">
+        <div class="rotating-message" id="message1">
+            🌿 En el corazón de la tierra late un remedio antiguo. En Allpa y Flora cultivamos plantas etnogénicas con sabiduría ancestral, guiando almas hacia la sanación de las adicciones. No se trata de huir del dolor, sino de encontrar el camino de regreso a uno mismo. Conectamos raíces con raíces: las de la tierra y las del espíritu.
+            <div class="message-tagline">🌱 Allpa y Flora – Donde la naturaleza sana lo que el mundo rompió.</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <section id="nosotros">
+            <h2>Nuestra Misión</h2>
+            <p>En <strong>Allpa y Flora</strong> nos dedicamos al cultivo, poda y cuidado de plantas etnogénicas, conectando la sabiduría ancestral con prácticas modernas de sanación. Trabajamos desde el respeto profundo a la tierra y a los saberes indígenas, promoviendo el uso sagrado y responsable de plantas medicinales como herramienta de transformación personal y comunitaria.</p>
+            <p>Creemos que las plantas no son solo vegetación: son maestras. A través de ellas, acompañamos procesos terapéuticos basados en evidencia, respeto y conciencia, ayudando a quienes buscan sanar adicciones desde la raíz y reconectar con su esencia más profunda.</p>
+        </section>
+
+        <section id="servicios">
+            <h2>Nuestros Servicios</h2>
+            <p><strong>🌱 Cultivo responsable:</strong> Cultivamos plantas etnogénicas con técnicas sostenibles y respeto a los ciclos naturales.</p>
+            <p><strong>✂️ Poda y cuidado especializado:</strong> Mantenemos la salud y vitalidad de cada planta con conocimiento tradicional y técnico.</p>
+            <p><strong>🌿 Acompañamiento terapéutico:</strong> Creamos espacios de sanación donde la tierra, las plantas y el acompañamiento humano se unen para transformar vidas.</p>
+            <p><strong>📚 Educación y difusión:</strong> Promovemos el conocimiento sobre el uso sagrado de plantas medicinales y su rol en la sanación comunitaria.</p>
+        </section>
+
+        <section id="ubicaciones">
+            <h2>Lugares Donde Hemos Trabajado</h2>
+            <p>Nuestra fundación ha llevado su trabajo de sanación y cultivo a diversas comunidades. A continuación, puedes ver los lugares donde hemos dejado nuestra semilla:</p>
+            <div id="map"></div>
+        </section>
+
+        <section id="contacto">
+            <h2>Contacto</h2>
+            <p>¿Has perdido el rumbo? No estás solo. En Allpa y Flora creamos espacios de sanación donde la tierra, las plantas y el acompañamiento humano se unen para sanar adicciones desde la raíz. Cultivamos cura, cultivamos comunidad, cultivamos futuro.</p>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon">📧</div>
+                    <h3>Email</h3>
+                    <p>info@allpayflora.org</p>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">📱</div>
+                    <h3>Teléfono</h3>
+                    <p>+54 9 387 123-4567</p>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">📍</div>
+                    <h3>Ubicación</h3>
+                    <p>Salta, Argentina</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-vine"></div>
+        <p>✨ Allpa y Flora – Un nuevo amanecer nace de la semilla.</p>
+        <p class="footer-credit">Creado por Séptima Pacha Co. 🌿</p>
+    </footer>
+
+    <script>
+        // Rotating messages
+        const messages = [
+            {
+                text: '🌿 En el corazón de la tierra late un remedio antiguo. En Allpa y Flora cultivamos plantas etnogénicas con sabiduría ancestral, guiando almas hacia la sanación de las adicciones. No se trata de huir del dolor, sino de encontrar el camino de regreso a uno mismo. Conectamos raíces con raíces: las de la tierra y las del espíritu.',
+                tagline: '🌱 Allpa y Flora – Donde la naturaleza sana lo que el mundo rompió.'
+            },
+            {
+                text: '💡 Las plantas no son solo vegetación: son maestras. En Allpa y Flora promovemos el uso sagrado y responsable de plantas etnogénicas como herramienta de sanación frente a las adicciones. Apoyamos procesos terapéuticos basados en evidencia y respeto a los saberes indígenas. Porque la cura no siempre viene en pastillas: a veces brota del suelo.',
+                tagline: '🌎 Allpa y Flora – Cultivando conciencia, transformando vidas.'
+            },
+            {
+                text: '💚 ¿Has perdido el rumbo? No estás solo. En Allpa y Flora creamos espacios de sanación donde la tierra, las plantas y el acompañamiento humano se unen para sanar adicciones desde la raíz. Cultivamos cura, cultivamos comunidad, cultivamos futuro.',
+                tagline: '✨ Allpa y Flora – Un nuevo amanecer nace de la semilla.'
+            }
+        ];
+
+        let currentMessage = 0;
+        const messageContainer = document.querySelector('.rotating-message');
+
+        function rotateMessage() {
+            messageContainer.style.opacity = '0';
+            setTimeout(() => {
+                currentMessage = (currentMessage + 1) % messages.length;
+                messageContainer.innerHTML = `
+                    ${messages[currentMessage].text}
+                    <div class="message-tagline">${messages[currentMessage].tagline}</div>
+                `;
+                messageContainer.style.opacity = '1';
+            }, 1000);
+        }
+
+        setInterval(rotateMessage, 15000);
+
+        // Map initialization
+        setTimeout(() => {
+            const map = L.map('map').setView([-24.7859, -65.4117], 6);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Locations where the foundation has worked
+            const locations = [
+                { lat: -24.7859, lng: -65.4117, name: 'Salta Capital', desc: 'Centro principal de operaciones' },
+                { lat: -26.8241, lng: -65.2226, name: 'San Miguel de Tucumán', desc: 'Proyecto de cultivo comunitario' },
+                { lat: -24.1858, lng: -65.2995, name: 'Jujuy', desc: 'Talleres de sanación ancestral' },
+                { lat: -27.3621, lng: -66.8462, name: 'Catamarca', desc: 'Cultivo sustentable en tierras altas' },
+                { lat: -31.4201, lng: -64.1888, name: 'Córdoba', desc: 'Centro de educación y difusión' }
+            ];
+
+            locations.forEach(loc => {
+                const marker = L.marker([loc.lat, loc.lng]).addTo(map);
+                marker.bindPopup(`<strong>${loc.name}</strong><br>${loc.desc}`);
+            });
+        }, 4500);
+
+        // Hide splash screen
+        setTimeout(() => {
+            document.getElementById('splash').style.display = 'none';
+        }, 4500);
+    </script>
+</body>
+</html>
