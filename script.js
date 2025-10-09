@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -13,17 +14,19 @@
     --secondary-olive: #8B9D5C;
     --primary-purple: #8B5A9E;
     --warm-cream: #FFF8E7;
+    --vibrant-lime: #9FD356;
+    --deep-forest: #2D5016;
 }
 
 body {
     font-family: 'Quicksand', sans-serif;
     overflow-x: hidden;
-    background: linear-gradient(135deg, var(--warm-cream) 0%, var(--secondary-yellow) 100%);
+    background: linear-gradient(135deg, var(--secondary-peach) 0%, var(--secondary-yellow) 50%, var(--vibrant-lime) 100%);
     min-height: 100vh;
     position: relative;
 }
 
-/* Splash Screen */
+/* Splash Screen Mejorada */
 #splash {
     position: fixed;
     top: 0;
@@ -33,18 +36,34 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.95);
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-yellow) 30%, var(--vibrant-lime) 60%, var(--primary-green) 100%);
     z-index: 1000;
-    transition: opacity 1s ease-out;
+    transition: opacity 1.5s ease-out;
+}
+
+#splash::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 50%, rgba(217, 74, 92, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(139, 90, 158, 0.3) 0%, transparent 50%);
+    animation: splashPulse 4s ease-in-out infinite;
+}
+
+@keyframes splashPulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
 }
 
 #splash-logo {
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 400px;
+    height: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 2;
 }
 
 #logo-image {
@@ -52,21 +71,44 @@ body {
     height: 350px;
     border-radius: 50%;
     object-fit: cover;
-    border: 6px solid #649532;
-    box-shadow: 0 15px 50px rgba(100, 149, 50, 0.4);
-    animation: logoPulse 2s ease-in-out infinite alternate;
+    border: 8px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(45deg, var(--primary-red), var(--primary-orange), var(--vibrant-lime), var(--primary-purple), var(--primary-red)) border-box;
+    box-shadow: 0 0 60px rgba(247, 167, 85, 0.6),
+                0 0 100px rgba(159, 211, 86, 0.4),
+                inset 0 0 30px rgba(255, 255, 255, 0.2);
+    animation: logoFloat 3s ease-in-out infinite, logoGlow 2s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-20px) scale(1.05); }
+}
+
+@keyframes logoGlow {
+    0%, 100% { filter: brightness(1) drop-shadow(0 0 20px rgba(247, 167, 85, 0.5)); }
+    50% { filter: brightness(1.2) drop-shadow(0 0 40px rgba(159, 211, 86, 0.8)); }
 }
 
 #logo-text {
     position: absolute;
     text-align: center;
-    font-family: 'Georgia', serif;
+    font-family: 'Righteous', cursive;
     font-weight: bold;
-    color: #649532;
-    font-size: 1.2rem;
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-orange), var(--vibrant-lime));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     opacity: 0;
-    animation: textFadeIn 1s ease-out 1.5s forwards;
+    animation: textRainbow 1.5s ease-out 2s forwards;
+    letter-spacing: 3px;
+}
+
+@keyframes textRainbow {
+    from { opacity: 0; transform: translateY(20px) scale(0.8); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .vine-container {
@@ -81,111 +123,106 @@ body {
 .vine-circle {
     position: absolute;
     border-radius: 50%;
-    border: 2px solid transparent;
+    border: 3px solid transparent;
     box-sizing: border-box;
     opacity: 0;
 }
 
 .vine-circle:nth-child(1) {
-    width: 300px;
-    height: 300px;
+    width: 350px;
+    height: 350px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     animation: vineExpand 3s ease-out 0.5s forwards;
-    border-color: #649532;
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 20px var(--primary-orange);
 }
 
 .vine-circle:nth-child(2) {
-    width: 450px;
-    height: 450px;
+    width: 500px;
+    height: 500px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     animation: vineExpand 3s ease-out 1s forwards;
-    border-color: #77853c;
+    border-color: var(--vibrant-lime);
+    box-shadow: 0 0 20px var(--vibrant-lime);
 }
 
 .vine-circle:nth-child(3) {
-    width: 600px;
-    height: 600px;
+    width: 650px;
+    height: 650px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     animation: vineExpand 3s ease-out 1.5s forwards;
-    border-color: #649532;
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 20px var(--primary-purple);
 }
 
 .vine-circle:nth-child(4) {
-    width: 750px;
-    height: 750px;
+    width: 800px;
+    height: 800px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     animation: vineExpand 3s ease-out 2s forwards;
-    border-color: #77853c;
-}
-
-.leaf-element {
-    position: absolute;
-    font-size: 2rem;
-    opacity: 0;
-    animation: leafFloat 4s ease-out forwards;
-}
-
-.leaf-1 { top: 20%; left: 15%; animation-delay: 0.8s; }
-.leaf-2 { top: 15%; right: 20%; animation-delay: 1.2s; }
-.leaf-3 { bottom: 25%; left: 25%; animation-delay: 1.6s; }
-.leaf-4 { bottom: 20%; right: 15%; animation-delay: 2s; }
-.leaf-5 { top: 40%; left: 5%; animation-delay: 2.4s; }
-.leaf-6 { top: 60%; right: 5%; animation-delay: 2.8s; }
-.leaf-7 { bottom: 10%; left: 40%; animation-delay: 3.2s; }
-.leaf-8 { top: 10%; left: 50%; animation-delay: 3.6s; }
-
-@keyframes logoPulse {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.05); }
-}
-
-@keyframes textFadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    border-color: var(--primary-red);
+    box-shadow: 0 0 20px var(--primary-red);
 }
 
 @keyframes vineExpand {
     0% {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0.1);
+        transform: translate(-50%, -50%) scale(0.1) rotate(0deg);
     }
     50% {
-        opacity: 0.7;
+        opacity: 0.9;
     }
     100% {
-        opacity: 0.4;
-        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1) rotate(360deg);
     }
 }
+
+.leaf-element {
+    position: absolute;
+    font-size: 3rem;
+    opacity: 0;
+    animation: leafFloat 4s ease-out forwards;
+    filter: drop-shadow(0 0 10px currentColor);
+}
+
+.leaf-1 { top: 20%; left: 15%; animation-delay: 0.8s; color: var(--primary-orange); }
+.leaf-2 { top: 15%; right: 20%; animation-delay: 1.2s; color: var(--vibrant-lime); }
+.leaf-3 { bottom: 25%; left: 25%; animation-delay: 1.6s; color: var(--primary-purple); }
+.leaf-4 { bottom: 20%; right: 15%; animation-delay: 2s; color: var(--primary-red); }
+.leaf-5 { top: 40%; left: 5%; animation-delay: 2.4s; color: var(--primary-orange); }
+.leaf-6 { top: 60%; right: 5%; animation-delay: 2.8s; color: var(--vibrant-lime); }
+.leaf-7 { bottom: 10%; left: 40%; animation-delay: 3.2s; color: var(--primary-purple); }
+.leaf-8 { top: 10%; left: 50%; animation-delay: 3.6s; color: var(--primary-green); }
 
 @keyframes leafFloat {
     0% {
         opacity: 0;
-        transform: translate(0, 0) rotate(0deg);
+        transform: translate(0, 0) rotate(0deg) scale(0);
     }
     30% {
-        opacity: 0.8;
+        opacity: 1;
     }
     100% {
-        opacity: 0.6;
-        transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rotate, 0deg));
+        opacity: 0.8;
+        transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rotate, 0deg)) scale(1);
     }
 }
 
-/* Hide splash after animation */
 .hide-splash {
     opacity: 0;
+    pointer-events: none;
 }
 
-/* Botanical Background */
+/* Botanical Background Mejorado */
 .botanical-bg {
     position: fixed;
     top: 0;
@@ -199,44 +236,57 @@ body {
 
 .botanical-leaf {
     position: absolute;
-    opacity: 0.1;
+    opacity: 0.15;
     animation: botanicalFloat 20s ease-in-out infinite;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 @keyframes botanicalFloat {
     0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(10deg); }
+    50% { transform: translateY(-30px) rotate(15deg); }
 }
 
-/* Header */
+/* Header Mejorado */
 header {
-    background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-orange) 50%, var(--secondary-yellow) 100%);
-    padding: 3rem 2rem;
+    background: linear-gradient(135deg, 
+        var(--primary-red) 0%, 
+        var(--primary-orange) 25%, 
+        var(--secondary-yellow) 50%, 
+        var(--vibrant-lime) 75%, 
+        var(--primary-green) 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 8s ease infinite;
+    padding: 4rem 2rem;
     text-align: center;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
     position: relative;
     overflow: hidden;
-    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 header::before {
     content: '🌿';
     position: absolute;
-    font-size: 12rem;
-    opacity: 0.15;
+    font-size: 15rem;
+    opacity: 0.2;
     left: -50px;
     top: -30px;
-    animation: rotate 20s linear infinite;
+    animation: rotate 20s linear infinite, colorShift 5s ease-in-out infinite;
 }
 
 header::after {
     content: '🌱';
     position: absolute;
-    font-size: 10rem;
-    opacity: 0.15;
+    font-size: 12rem;
+    opacity: 0.2;
     right: -30px;
     bottom: -20px;
-    animation: rotate 15s linear infinite reverse;
+    animation: rotate 15s linear infinite reverse, colorShift 5s ease-in-out infinite 2.5s;
 }
 
 @keyframes rotate {
@@ -244,16 +294,44 @@ header::after {
     to { transform: rotate(360deg); }
 }
 
+@keyframes colorShift {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(60deg); }
+}
+
 h1 {
     font-family: 'Righteous', cursive;
-    font-size: 5rem;
-    color: white;
-    margin-bottom: 1.5rem;
-    text-shadow: 4px 4px 0px var(--primary-purple), 6px 6px 8px rgba(0,0,0,0.3);
-    animation: slideDown 1s ease-out;
-    letter-spacing: 2px;
+    font-size: 6rem;
+    background: linear-gradient(45deg, 
+        white 0%, 
+        var(--secondary-yellow) 20%, 
+        white 40%, 
+        var(--vibrant-lime) 60%, 
+        white 80%, 
+        var(--secondary-peach) 100%);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 2rem;
+    text-shadow: 4px 4px 0px var(--primary-purple), 
+                 6px 6px 8px rgba(0,0,0,0.4),
+                 0 0 30px rgba(255, 255, 255, 0.5);
+    animation: slideDown 1s ease-out, textGradient 6s ease infinite, textFloat 3s ease-in-out infinite;
+    letter-spacing: 4px;
     position: relative;
     transform: rotate(-2deg);
+    filter: drop-shadow(0 0 20px rgba(247, 167, 85, 0.6));
+}
+
+@keyframes textGradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes textFloat {
+    0%, 100% { transform: rotate(-2deg) translateY(0); }
+    50% { transform: rotate(-2deg) translateY(-10px); }
 }
 
 @keyframes slideDown {
@@ -269,34 +347,79 @@ h1 {
 
 .slogan {
     font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    font-size: 1.3rem;
-    color: white;
-    margin-bottom: 0.5rem;
+    font-weight: 700;
+    font-size: 1.5rem;
+    background: linear-gradient(90deg, 
+        white, 
+        var(--secondary-yellow), 
+        white);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% auto;
+    animation: sloganShine 3s linear infinite;
+    margin-bottom: 0.8rem;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
-/* Rotating Messages */
+@keyframes sloganShine {
+    to { background-position: 200% center; }
+}
+
+/* Rotating Messages Mejorado */
 .message-container {
-    background: rgba(255,255,255,0.95);
-    padding: 2rem;
-    margin: 3rem auto;
-    max-width: 900px;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(217, 74, 92, 0.2);
+    background: linear-gradient(135deg, 
+        rgba(255,255,255,0.95) 0%, 
+        rgba(255,244,184,0.95) 50%, 
+        rgba(255,255,255,0.95) 100%);
+    padding: 3rem;
+    margin: 4rem auto;
+    max-width: 950px;
+    border-radius: 30px;
+    box-shadow: 0 15px 60px rgba(217, 74, 92, 0.3),
+                0 0 40px rgba(159, 211, 86, 0.2);
     position: relative;
     overflow: hidden;
-    border: 3px solid var(--primary-orange);
+    border: 4px solid transparent;
+    background-clip: padding-box;
 }
 
 .message-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        var(--primary-red), 
+        var(--primary-orange), 
+        var(--vibrant-lime), 
+        var(--primary-purple), 
+        var(--primary-red));
+    background-size: 400% 400%;
+    border-radius: 30px;
+    z-index: -1;
+    animation: borderRainbow 4s ease infinite;
+}
+
+@keyframes borderRainbow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.message-container::after {
     content: '';
     position: absolute;
     top: -50%;
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(247, 167, 85, 0.1), transparent);
+    background: linear-gradient(45deg, 
+        transparent, 
+        rgba(247, 167, 85, 0.2), 
+        transparent);
     animation: shimmer 3s infinite;
 }
 
@@ -307,8 +430,8 @@ h1 {
 
 .rotating-message {
     font-family: 'Quicksand', sans-serif;
-    font-size: 1.1rem;
-    line-height: 1.8;
+    font-size: 1.2rem;
+    line-height: 2;
     color: #333;
     text-align: center;
     position: relative;
@@ -318,14 +441,26 @@ h1 {
 
 .message-tagline {
     font-family: 'Righteous', cursive;
-    font-size: 1.3rem;
-    color: var(--primary-orange);
-    margin-top: 1rem;
-    font-weight: 600;
-    text-shadow: 1px 1px 0px var(--primary-purple);
+    font-size: 1.5rem;
+    background: linear-gradient(90deg, 
+        var(--primary-orange), 
+        var(--vibrant-lime), 
+        var(--primary-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% auto;
+    animation: taglineShine 3s linear infinite;
+    margin-top: 1.5rem;
+    font-weight: 700;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
 }
 
-/* Main Content */
+@keyframes taglineShine {
+    to { background-position: 200% center; }
+}
+
+/* Main Content Mejorado */
 main {
     padding: 2rem;
     max-width: 1200px;
@@ -333,22 +468,25 @@ main {
 }
 
 section {
-    background: white;
-    padding: 3.5rem;
-    margin: 3rem 0;
-    border-radius: 25px;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.12);
+    background: linear-gradient(135deg, 
+        rgba(255,255,255,0.95) 0%, 
+        rgba(255,248,231,0.95) 50%, 
+        rgba(255,255,255,0.95) 100%);
+    padding: 4rem;
+    margin: 4rem 0;
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     animation: slideUp 0.8s ease-out;
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 2px solid transparent;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    border: 3px solid transparent;
 }
 
 section:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 60px rgba(217, 74, 92, 0.25);
-    border-color: var(--primary-orange);
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 30px 80px rgba(217, 74, 92, 0.3),
+                0 0 40px rgba(159, 211, 86, 0.2);
 }
 
 section::before {
@@ -356,14 +494,26 @@ section::before {
     position: absolute;
     top: 0;
     left: 0;
-    width: 8px;
+    width: 10px;
     height: 100%;
-    background: linear-gradient(to bottom, var(--primary-red), var(--primary-orange), var(--secondary-yellow), var(--primary-green));
+    background: linear-gradient(to bottom, 
+        var(--primary-red), 
+        var(--primary-orange), 
+        var(--secondary-yellow), 
+        var(--vibrant-lime),
+        var(--primary-green));
+    background-size: 100% 200%;
+    animation: gradientMove 3s ease infinite;
     transition: width 0.3s ease;
 }
 
+@keyframes gradientMove {
+    0%, 100% { background-position: 0% 0%; }
+    50% { background-position: 0% 100%; }
+}
+
 section:hover::before {
-    width: 12px;
+    width: 15px;
 }
 
 @keyframes slideUp {
@@ -379,12 +529,18 @@ section:hover::before {
 
 h2 {
     font-family: 'Righteous', cursive;
-    font-size: 2.8rem;
-    color: var(--primary-orange);
-    margin-bottom: 1.5rem;
+    font-size: 3rem;
+    background: linear-gradient(135deg, 
+        var(--primary-orange), 
+        var(--vibrant-lime), 
+        var(--primary-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 2rem;
     position: relative;
     display: inline-block;
-    text-shadow: 2px 2px 0px var(--primary-purple);
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
 }
 
 h2::after {
@@ -393,81 +549,126 @@ h2::after {
     bottom: -10px;
     left: 0;
     width: 100%;
-    height: 4px;
-    background: linear-gradient(to right, var(--primary-red), var(--primary-orange), var(--primary-green));
-    border-radius: 2px;
+    height: 5px;
+    background: linear-gradient(to right, 
+        var(--primary-red), 
+        var(--primary-orange), 
+        var(--vibrant-lime),
+        var(--primary-green));
+    border-radius: 3px;
+    animation: underlineGlow 2s ease-in-out infinite;
+}
+
+@keyframes underlineGlow {
+    0%, 100% { box-shadow: 0 0 5px var(--primary-orange); }
+    50% { box-shadow: 0 0 20px var(--vibrant-lime); }
 }
 
 p {
-    line-height: 1.8;
-    color: #555;
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
+    line-height: 2;
+    color: #444;
+    margin-bottom: 1.5rem;
+    font-size: 1.15rem;
 }
 
 /* Map */
 #map {
     height: 500px;
     width: 100%;
-    border-radius: 15px;
+    border-radius: 20px;
     margin-top: 2rem;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    border: 3px solid var(--primary-orange);
 }
 
-/* Contact */
+/* Contact Mejorado */
 .contact-info {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
+    gap: 2.5rem;
+    margin-top: 2.5rem;
 }
 
 .contact-item {
-    background: linear-gradient(135deg, var(--secondary-yellow), var(--primary-orange));
-    padding: 2rem;
-    border-radius: 15px;
+    background: linear-gradient(135deg, 
+        var(--secondary-yellow), 
+        var(--primary-orange), 
+        var(--vibrant-lime));
+    background-size: 200% 200%;
+    animation: contactGradient 5s ease infinite;
+    padding: 2.5rem;
+    border-radius: 20px;
     text-align: center;
-    transition: transform 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    border: 3px solid white;
+}
+
+@keyframes contactGradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 .contact-item:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    transform: translateY(-15px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
 .contact-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    animation: iconBounce 2s ease-in-out infinite;
+}
+
+@keyframes iconBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
 .contact-item h3 {
     font-family: 'Righteous', cursive;
-    font-size: 1.5rem;
-    color: var(--primary-purple);
-    margin-bottom: 0.5rem;
+    font-size: 1.7rem;
+    color: white;
+    margin-bottom: 0.8rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-/* Footer */
+/* Footer Mejorado */
 footer {
-    background: linear-gradient(135deg, var(--primary-green), var(--secondary-olive));
+    background: linear-gradient(135deg, 
+        var(--primary-green), 
+        var(--secondary-olive),
+        var(--deep-forest));
+    background-size: 200% 200%;
+    animation: footerGradient 8s ease infinite;
     color: white;
     text-align: center;
-    padding: 3rem 2rem;
-    margin-top: 4rem;
+    padding: 4rem 2rem;
+    margin-top: 5rem;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
+}
+
+@keyframes footerGradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 footer::before {
     content: '🍃';
     position: absolute;
-    font-size: 15rem;
-    opacity: 0.05;
+    font-size: 20rem;
+    opacity: 0.08;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    animation: rotate 30s linear infinite;
+    animation: rotate 30s linear infinite, pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { filter: drop-shadow(0 0 20px rgba(255,255,255,0.3)); }
+    50% { filter: drop-shadow(0 0 40px rgba(159,211,86,0.5)); }
 }
 
 .footer-vine {
@@ -475,13 +676,13 @@ footer::before {
     top: 0;
     left: 0;
     width: 100%;
-    height: 20px;
+    height: 30px;
     background: repeating-linear-gradient(
         90deg,
         transparent,
         transparent 20px,
-        rgba(255,255,255,0.2) 20px,
-        rgba(255,255,255,0.2) 40px
+        rgba(255,255,255,0.3) 20px,
+        rgba(255,255,255,0.3) 40px
     );
     animation: vineScroll 10s linear infinite;
 }
@@ -493,33 +694,36 @@ footer::before {
 
 footer p {
     font-family: 'Quicksand', sans-serif;
+    font-size: 1.2rem;
     color: white;
     position: relative;
     z-index: 1;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 .footer-credit {
-    font-size: 0.9rem;
-    margin-top: 1rem;
-    opacity: 0.8;
+    font-size: 1rem;
+    margin-top: 1.5rem;
+    opacity: 0.9;
+    font-weight: 600;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     h1 {
-        font-size: 2.5rem;
+        font-size: 3rem;
     }
 
     .slogan {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 
     h2 {
-        font-size: 2rem;
+        font-size: 2.2rem;
     }
 
     section {
-        padding: 2rem;
+        padding: 2.5rem;
     }
 
     #map {
@@ -527,8 +731,8 @@ footer p {
     }
 
     .message-container {
-        padding: 1.5rem;
-        margin: 2rem 1rem;
+        padding: 2rem;
+        margin: 2.5rem 1rem;
     }
 
     .rotating-message {
@@ -541,8 +745,11 @@ footer p {
     }
 
     #logo-image {
-        width: 250px;
-        height: 250px;
-        border: 5px solid #649532;
+        width: 280px;
+        height: 280px;
+    }
+
+    #logo-text {
+        font-size: 1.8rem;
     }
 }
