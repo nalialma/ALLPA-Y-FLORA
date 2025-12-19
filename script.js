@@ -1,5 +1,4 @@
-
-        // Splash screen
+// Splash screen
         window.addEventListener('load', function() {
             setTimeout(function() {
                 document.getElementById('splash').classList.add('hide-splash');
@@ -28,4 +27,3 @@
                 .addTo(map)
                 .bindPopup('<strong>' + location.name + '</strong><br>Proyecto de sanación comunitaria');
         });
-
